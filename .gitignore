@@ -1,0 +1,5 @@
+node_modules
+seed
+crawler/pages
+manifest.txt
+**/*.log
