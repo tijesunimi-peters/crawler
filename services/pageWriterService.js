@@ -28,7 +28,7 @@ const PageWriter = function()  {
       fs.writeFile(pageLocation.path, content, function(err) {
         if(err) return cb(err);
 
-        cb()
+        cb(null, pageLocation, parsedCsvRow)
       })
     })
   }

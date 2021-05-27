@@ -1,0 +1,24 @@
+version: "3.8"
+
+services:
+  redis:
+    image: redis
+    container_name: redis_server
+    ports:
+      - 6379:6379
+    volumes:
+      - redis_volume
+  crawler:
+    container_name: crawler
+    build: ./
+    volumes:
+      - ./:/var/www/crawler
+    command: sh -c "npm start"
+    depends_on:
+      - redis
+    ports:
+      - 3000:3000
+    env_file: .env
+
+volumes:
+  redis_volume:

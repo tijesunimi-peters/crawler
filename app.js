@@ -1,9 +1,16 @@
+let dotenv = require('dotenv')
+dotenv.config()
+let fs = require('fs')
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-let { LOG_FILE } = require("../config/constants.js")
+let worker = require("./worker.js")
+let { LOG_FILE, SEEDER_DIR, DOMAINS_FILENAME } = require("./config/constants.js")
+let { Queue } = require("node-resque")
+let seeder_file = path.join(SEEDER_DIR, DOMAINS_FILENAME)
+let queue = new Queue({ connection: require("./config/node_resque.js").redisConnection })
 
 var indexRouter = require('./routes/index');
 
@@ -36,5 +43,15 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+(async function() {
+  worker.boot();
+  try {
+    await queue.connect()
+    await queue.enqueue("domain-files", "domainsCsvReaderJob", [seeder_file])
+  } catch(err) {
+    console.log(err)
+  }
+})()
 
 module.exports = app;

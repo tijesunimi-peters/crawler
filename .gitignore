@@ -1,5 +1,6 @@
 node_modules
 seed
-crawler/pages
+pages
 manifest.txt
 **/*.log
+.env
