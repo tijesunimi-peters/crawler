@@ -24,7 +24,7 @@ function MainWorker() {
   }
 
   function onPoll(workerId, queue) {
-    console.log(`[Worker ${workerId}]: Polling @ `, queue)
+    // console.log(`[Worker ${workerId}]: Polling @ `, queue)
   }
 
   function onSuccess(workerId, queue, job, result) {
