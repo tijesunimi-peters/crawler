@@ -8,12 +8,11 @@ services:
       - 6379:6379
     volumes:
       - redis_volume
-  crawler:
-    container_name: crawler
+  web-crawler:
+    container_name: crawler 
     build: ./
     volumes:
       - ./:/var/www/crawler
-    command: sh -c "npm start"
     depends_on:
       - redis
     ports:

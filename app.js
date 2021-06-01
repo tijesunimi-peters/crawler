@@ -13,6 +13,7 @@ let seeder_file = path.join(SEEDER_DIR, DOMAINS_FILENAME)
 let queue = new Queue({ connection: require("./config/node_resque.js").redisConnection })
 
 var indexRouter = require('./routes/index');
+var domainsRouter = require('./routes/domains');
 
 var app = express();
 
@@ -27,6 +28,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
+app.use('/domains', domainsRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -44,14 +46,14 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-(async function() {
-  worker.boot();
-  try {
-    await queue.connect()
-    await queue.enqueue("domain-files", "domainsCsvReaderJob", [seeder_file])
-  } catch(err) {
-    console.log(err)
-  }
-})()
+// (async function() {
+//   worker.boot();
+//   try {
+//     await queue.connect()
+//     await queue.enqueue("domain-files", "domainsCsvReaderJob", [seeder_file])
+//   } catch(err) {
+//     console.log(err)
+//   }
+// })()
 
 module.exports = app;

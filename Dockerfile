@@ -1,5 +1,9 @@
 FROM node:12
 
+WORKDIR /var/www/crawler
+
+COPY . .
+
 RUN npm i
 
-WORKDIR /var/www/crawler
+ENTRYPOINT ["npm", "start"] 

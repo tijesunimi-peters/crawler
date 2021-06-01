@@ -1,0 +1,7 @@
+extends layout
+
+block content
+  h1= title
+  form(action="/domains", method="POST", enctype="multipart/form-data")
+    input(type="file", name="domains-csv")
+    input(type="submit", value="Upload")
