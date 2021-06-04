@@ -2,17 +2,18 @@ const fs = require("fs")
 const path = require("path")
 const { MANIFEST_FILE } = require("../config/constants.js")
 let { redis } = require("../config/node_resque.js")
+const logger = require("../config/logger.js")
 
 function manifestFileService(err, hashLocation, parsedCsvRow) {
-  if(err) throw err;
-  console.log(`[Finished downloading]: ${parsedCsvRow.Domain}`)
-  console.log(`Writing to manifest`)
+  if(err) logger.error(err);
+  logger.log(`[Finished downloading]: ${parsedCsvRow.Domain}`)
+  logger.log(`Writing to manifest`)
 
 
   redis.hset("domains-metadata", hashLocation.md5, JSON.stringify({...hashLocation, ...parsedCsvRow}), function(err) {
-    if(err) throw err;
+    if(err) logger.error(err);
 
-    console.log(`[${parsedCsvRow.Domain}]: Written to manifest`)
+    logger.log(`[${parsedCsvRow.Domain}]: Written to manifest`)
   })
 }
 

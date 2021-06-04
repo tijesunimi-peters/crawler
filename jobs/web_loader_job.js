@@ -2,6 +2,7 @@ const { redisConnection } = require("../config/node_resque.js")
 const { Queue } = require("node-resque")
 const webLoader = require("../services/webLoaderService.js")
 const { manifestFileService } = require("../services/manifestFileService.js")
+const logger = require("../config/logger.js")
 
 module.exports = {
   perform: async (parsedCsvRow) => {
@@ -11,7 +12,7 @@ module.exports = {
       await queue.connect();
       queue.enqueue("page-writer", "pageWriterJob", [parsedCsvRow, response.data, manifestFileService])
     } catch(err) {
-      console.log(`[${parsedCsvRow.Domain}]: `, err.message)
+      logger.error(`[${parsedCsvRow.Domain}]: `, err.message)
     }
   }
 }

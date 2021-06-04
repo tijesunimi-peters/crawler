@@ -7,10 +7,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 let worker = require("./worker.js")
-let { LOG_FILE, SEEDER_DIR, DOMAINS_FILENAME } = require("./config/constants.js")
-let { Queue } = require("node-resque")
-let seeder_file = path.join(SEEDER_DIR, DOMAINS_FILENAME)
-let queue = new Queue({ connection: require("./config/node_resque.js").redisConnection })
+let { LOG_FILE } = require("./config/constants.js")
 
 var indexRouter = require('./routes/index');
 var domainsRouter = require('./routes/domains');
@@ -46,14 +43,6 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-// (async function() {
-//   worker.boot();
-//   try {
-//     await queue.connect()
-//     await queue.enqueue("domain-files", "domainsCsvReaderJob", [seeder_file])
-//   } catch(err) {
-//     console.log(err)
-//   }
-// })()
+worker.boot();
 
 module.exports = app;
