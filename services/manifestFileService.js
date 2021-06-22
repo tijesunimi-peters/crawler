@@ -10,8 +10,12 @@ function manifestFileService(err, hashLocation, parsedCsvRow) {
   logger.log(`Writing to manifest`)
 
 
-  redis.hset("domains-metadata", hashLocation.md5, JSON.stringify({...hashLocation, ...parsedCsvRow}), function(err) {
+  redis.hset("domains-metadata", hashLocation.md5, JSON.stringify({...hashLocation, ...parsedCsvRow}), async function(err) {
     if(err) logger.error(err);
+
+    await redis.rpush("domains-id", hashLocation.md5, function(err) {
+      logger.error(err)
+    })
 
     logger.log(`[${parsedCsvRow.Domain}]: Written to manifest`)
   })
